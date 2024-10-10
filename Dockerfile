@@ -1,4 +1,4 @@
-FROM golang:1.13 as builder
+FROM golang:1.23 as builder
 
 RUN mkdir /app
 
@@ -8,7 +8,6 @@ WORKDIR /app
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-FROM ubuntu:latest
 
 WORKDIR /app
 
