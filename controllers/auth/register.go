@@ -1,10 +1,9 @@
 package auth
 
 import (
-	"wcapp/models"
-	"wcapp/tools"
-
 	"github.com/gin-gonic/gin"
+	"untitled/models"
+	"untitled/tools"
 )
 
 type RegisterCon struct{}

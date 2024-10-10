@@ -1,0 +1,47 @@
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> untitled/controllers.Controller.Index-fm (4 handlers)
+[GIN-debug] GET    /learn/                   --> untitled/controllers/learn.LearnController.Index-fm (4 handlers)
+[GIN-debug] GET    /learn/resource/          --> untitled/controllers/learn.ResourceCon.Resource-fm (4 handlers)
+[GIN-debug] GET    /learn/video/             --> untitled/controllers/learn.VideoCon.Video-fm (4 handlers)
+[GIN-debug] GET    /learn/exercise/          --> untitled/controllers/learn.ExerciseCon.Point-fm (4 handlers)
+[GIN-debug] GET    /learn/exercise/point     --> untitled/controllers/learn.ExerciseCon.Exercise-fm (4 handlers)
+[GIN-debug] GET    /learn/discussion/        --> untitled/controllers/learn.DiscussionCon.Index-fm (4 handlers)
+[GIN-debug] GET    /learn/discussion/detail  --> untitled/controllers/learn.DiscussionCon.Detail-fm (4 handlers)
+[GIN-debug] POST   /learn/discussion/publish/d --> untitled/controllers/learn.DiscussionCon.PulishDiscussion-fm (5 handlers)
+[GIN-debug] POST   /learn/discussion/publish/c --> untitled/controllers/learn.DiscussionCon.PulishComment-fm (5 handlers)
+[GIN-debug] POST   /learn/compile/           --> untitled/controllers/learn.CompilerCon.Compile-fm (4 handlers)
+[GIN-debug] POST   /learn/record/add         --> untitled/controllers/learn.RecordCon.AddRecord-fm (5 handlers)
+[GIN-debug] GET    /learn/record/list        --> untitled/controllers/learn.RecordCon.Record-fm (5 handlers)
+[GIN-debug] POST   /learn/record/addChoice   --> untitled/controllers/learn.RecordCon.AddExerRecord-fm (5 handlers)
+[GIN-debug] GET    /learn/record/choiceList  --> untitled/controllers/learn.RecordCon.ChoiceRecord-fm (5 handlers)
+[GIN-debug] POST   /learn/course/select      --> untitled/controllers/learn.CourseCon.SlctCourse-fm (5 handlers)
+[GIN-debug] GET    /learn/course/list        --> untitled/controllers/learn.CourseCon.CourseList-fm (5 handlers)
+[GIN-debug] GET    /learn/course/all         --> untitled/controllers/learn.CourseCon.AllCourse-fm (5 handlers)
+[GIN-debug] GET    /learn/course/teacher     --> untitled/controllers/learn.CourseCon.TeacherCourse-fm (5 handlers)
+[GIN-debug] POST   /user/login               --> untitled/controllers/auth.LoginCon.OpenIdLogin-fm (4 handlers)
+[GIN-debug] GET    /user/space               --> untitled/controllers/auth.SpaceCon.Space-fm (5 handlers)
+[GIN-debug] POST   /user/changeInfo          --> untitled/controllers/auth.SpaceCon.ChangeInfo-fm (5 handlers)
+[GIN-debug] POST   /user/active              --> untitled/controllers/auth.RegisterCon.VIPRegister-fm (5 handlers)
+[GIN-debug] POST   /admin/active/t           --> untitled/controllers/auth.RegisterCon.TeacherRegister-fm (5 handlers)
+[GIN-debug] POST   /admin/upload/p           --> untitled/controllers/auth.UploadCon.UploadResource-fm (6 handlers)
+[GIN-debug] POST   /admin/upload/v           --> untitled/controllers/auth.UploadCon.UploadVideo-fm (6 handlers)
+[GIN-debug] POST   /admin/delete/p           --> untitled/controllers/auth.DeleteCon.DeleteResource-fm (6 handlers)
+[GIN-debug] POST   /admin/delete/v           --> untitled/controllers/auth.DeleteCon.DeleteVideo-fm (6 handlers)
+[GIN-debug] POST   /admin/upload/choice      --> untitled/controllers/auth.UploadCon.UploadChoice-fm (6 handlers)
+[GIN-debug] POST   /admin/upload/code        --> untitled/controllers/auth.UploadCon.UploadCode-fm (6 handlers)
+[GIN-debug] POST   /admin/delete/choice      --> untitled/controllers/auth.DeleteCon.DeleteChoice-fm (6 handlers)
+[GIN-debug] POST   /admin/delete/code        --> untitled/controllers/auth.DeleteCon.DeleteCode-fm (6 handlers)
+[GIN-debug] POST   /admin/upload/point       --> untitled/controllers/auth.UploadCon.UploadPoint-fm (6 handlers)
+[GIN-debug] POST   /admin/delete/point       --> untitled/controllers/auth.DeleteCon.DeletePoint-fm (6 handlers)
+[GIN-debug] POST   /admin/add/course         --> untitled/controllers/auth.UploadCon.AddCourse-fm (6 handlers)
+[GIN-debug] POST   /admin/super/login        --> untitled/controllers/auth.LoginCon.AdminLogin-fm (4 handlers)
+[GIN-debug] POST   /admin/super/exam         --> untitled/controllers/auth.SuperAdminCon.Exam-fm (6 handlers)
+[GIN-debug] GET    /admin/super/courseList   --> untitled/controllers/auth.SuperAdminCon.CourseList-fm (6 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :80

@@ -1,9 +1,8 @@
 package learn
 
 import (
-	"wcapp/tools"
-
 	"github.com/gin-gonic/gin"
+	"untitled/tools"
 )
 
 type LearnController struct{}
