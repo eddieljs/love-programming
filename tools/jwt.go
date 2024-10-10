@@ -3,7 +3,7 @@ package tools
 import (
 	"github.com/golang-jwt/jwt/v5"
 	"time"
-	"wcapp/models"
+	"untitled/models"
 )
 
 var jwtKey = []byte("a_secret_crect")

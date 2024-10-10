@@ -1,9 +1,8 @@
 package routers
 
 import (
-	"wcapp/controllers"
-
 	"github.com/gin-gonic/gin"
+	"untitled/controllers"
 )
 
 func RoutersInit(r *gin.Engine) {

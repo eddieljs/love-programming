@@ -1,10 +1,9 @@
 package routers
 
 import (
-	"wcapp/controllers/auth"
-	"wcapp/tools"
-
 	"github.com/gin-gonic/gin"
+	"untitled/controllers/auth"
+	"untitled/tools"
 )
 
 func AuthRouters(r *gin.Engine) {

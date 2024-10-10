@@ -1,10 +1,9 @@
 package routers
 
 import (
-	"wcapp/controllers/learn"
-	"wcapp/tools"
-
 	"github.com/gin-gonic/gin"
+	"untitled/controllers/learn"
+	"untitled/tools"
 )
 
 // 学习界面首页
