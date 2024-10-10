@@ -40,22 +40,6 @@ func main() {
 		}
 
 	}
-	r.Use(cors)
-
-	routers.RoutersInit(r)
-
-	routers.LearnRouters(r)
-	routers.ResourceRouters(r)
-	routers.VideoRouters(r)
-	routers.ExerciseRouters(r)
-	routers.DiscussionRouters(r)
-	routers.CompileRouters(r)
-	routers.RecordRouters(r)
-	routers.CourseRouters(r)
-
-	routers.AuthRouters(r)
-	routers.AdminRouters(r)
-
-	// routers.CodeRouters(r)
-	r.Run(":80")
+	print()
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
