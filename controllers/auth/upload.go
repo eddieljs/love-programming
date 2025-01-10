@@ -136,13 +136,6 @@ func (UploadCon) AddCourse(ctx *gin.Context) {
 	}
 
 	log.Println("后端返回时间" + ce.Time)
-	// 获取本地时区时间（Asia/Shanghai）
-	loc, err := time.LoadLocation("Asia/Shanghai")
-	if err != nil {
-		log.Fatalf("Error loading location: %v", err)
-	}
-	currentTimeLocal := time.Now().In(loc)
-	log.Printf("Current local time: %s", currentTimeLocal.Format("2006-01-02 15:04:05"))
 
 	models.DB.Create(&ce)
 	tools.Success(ctx, gin.H{
