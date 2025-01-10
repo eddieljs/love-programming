@@ -135,7 +135,7 @@ func (UploadCon) AddCourse(ctx *gin.Context) {
 		Time:        time.Now().Format("2006-01-02 15:04:05"),
 	}
 
-	log.Println("后端返回时间" + ce.Time)
+	log.Println("后端返回时间111" + ce.Time)
 
 	models.DB.Create(&ce)
 	tools.Success(ctx, gin.H{
