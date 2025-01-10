@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"log"
 	"net/http"
 	"time"
 	"untitled/models"
@@ -133,6 +134,7 @@ func (UploadCon) AddCourse(ctx *gin.Context) {
 		Message:     courseInfo.Message,
 		Time:        time.Now().Format("2006-01-02 15:04:05"),
 	}
+	log.Println(ce.Time)
 	models.DB.Create(&ce)
 	tools.Success(ctx, gin.H{
 		"req": ce,
