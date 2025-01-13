@@ -152,6 +152,7 @@ func (LoginCon) OpenIdLogin(ctx *gin.Context) {
 		"studentId": user.StudentId,
 		"name":      user.Name,
 		"avatar":    user.Avatar,
+		"class":     user.Class,
 	}, "登录成功"+user.StudentId)
 
 }

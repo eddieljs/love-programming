@@ -115,36 +115,153 @@ func (RegisterCon) TeacherRegister(ctx *gin.Context) {
 	}, "教师权限激活成功")
 }
 
+//func (RegisterCon) VIPRegister(ctx *gin.Context) {
+//	userInfo, _ := ctx.Get("user")
+//	user := userInfo.(models.User)
+//	vipKeyInfo := models.VIPKey{}
+//	if err := ctx.ShouldBind(&vipKeyInfo); err != nil {
+//		tools.Fail(ctx, gin.H{
+//			"ERROR": err.Error(),
+//		}, "获取信息失败")
+//		return
+//	}
+//	// 获取到vipKeyInfo，在数据库里找一下是不是真的。
+//	vipKey := models.VIPKey{}
+//	models.DB.Where("account = ? AND password = ?", vipKeyInfo.Account, vipKeyInfo.Password).First(&vipKey)
+//	// 如果是假的
+//	if vipKey.Id == 0 {
+//		tools.Fail(ctx, gin.H{
+//			"user":   user,
+//			"vipKey": vipKeyInfo,
+//		}, "激活码错误")
+//		return
+//	}
+//	// 如果是真的
+//	user.Auth = 2
+//	tx := models.DB.Begin()
+//	tx.Where("id = ?", vipKey.Id).Delete(&vipKey)
+//	tx.Save(&user)
+//	tx.Commit()
+//	tools.Success(ctx, gin.H{
+//		"user": user,
+//	}, "会员权限激活成功")
+//}
+
 func (RegisterCon) VIPRegister(ctx *gin.Context) {
-	userInfo, _ := ctx.Get("user")
-	user := userInfo.(models.User)
+	// 获取用户信息（模拟从上下文中获取）
+	userInfo, exists := ctx.Get("user")
+	if !exists {
+		tools.Fail(ctx, gin.H{
+			"ERROR": "用户未登录",
+		}, "获取用户信息失败")
+		return
+	}
+	user, ok := userInfo.(models.User)
+	if !ok {
+		tools.Fail(ctx, gin.H{
+			"ERROR": "用户信息格式错误",
+		}, "获取用户信息失败")
+		return
+	}
+	// 绑定 VIP 激活码信息
 	vipKeyInfo := models.VIPKey{}
-	if err := ctx.ShouldBind(&vipKeyInfo); err != nil {
+	if err := ctx.ShouldBindJSON(&vipKeyInfo); err != nil {
 		tools.Fail(ctx, gin.H{
 			"ERROR": err.Error(),
 		}, "获取信息失败")
 		return
 	}
-	// 获取到vipKeyInfo，在数据库里找一下是不是真的。
+	// 检查激活码是否为空
+	if vipKeyInfo.Account == "" || vipKeyInfo.Password == "" {
+		tools.Fail(ctx, gin.H{
+			"ERROR": "激活码不能空",
+		}, "激活码错误")
+		return
+	}
+	// 检查用户是否已经是 VIP
+	if user.Auth == 2 {
+		tools.Fail(ctx, gin.H{
+			"user": user,
+		}, "用户已激活")
+		return
+	}
+	// 查询激活码是否有效
 	vipKey := models.VIPKey{}
-	models.DB.Where("account = ? AND password = ?", vipKeyInfo.Account, vipKeyInfo.Password).First(&vipKey)
-	// 如果是假的
-	if vipKey.Id == 0 {
+	if err := models.DB.Where("account = ? AND password = ?", vipKeyInfo.Account, vipKeyInfo.Password).First(&vipKey).Error; err != nil {
 		tools.Fail(ctx, gin.H{
 			"user":   user,
 			"vipKey": vipKeyInfo,
 		}, "激活码错误")
 		return
 	}
-	// 如果是真的
-	user.Auth = 2
+	// 开启事务
 	tx := models.DB.Begin()
-	tx.Where("id = ?", vipKey.Id).Delete(&vipKey)
-	tx.Save(&user)
-	tx.Commit()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	// 更新用户信息
+	user.Auth = 2
+	user.Name = vipKey.Name           // 绑定姓名
+	user.Class = vipKey.Class         // 绑定班级
+	user.StudentId = vipKey.StudentId // 绑定学号
+
+	if err := tx.Save(&user).Error; err != nil {
+		tx.Rollback()
+		tools.Fail(ctx, gin.H{
+			"ERROR": err.Error(),
+		}, "用户信息更新失败")
+		return
+	}
+	// 删除已使用的激活码
+	if err := tx.Where("id = ?", vipKey.Id).Delete(&models.VIPKey{}).Error; err != nil {
+		tx.Rollback()
+		tools.Fail(ctx, gin.H{
+			"ERROR": err.Error(),
+		}, "激活码删除失败")
+		return
+	}
+	// 提交事务
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		tools.Fail(ctx, gin.H{
+			"ERROR": err.Error(),
+		}, "事务提交失败")
+		return
+	}
+	// 返回成功响应
 	tools.Success(ctx, gin.H{
-		"user": user,
-	}, "会员权限激活成功")
+		"user": user, // 只返回用户信息
+	}, "权限激活成功")
+}
+
+// 根据激活码查询信息
+func (RegisterCon) GetUserInfo(ctx *gin.Context) {
+	// 绑定请求数据
+	vipKeyInfo := models.VIPKey{}
+	if err := ctx.ShouldBindJSON(&vipKeyInfo); err != nil {
+		tools.Fail(ctx, gin.H{
+			"ERROR": err.Error(),
+		}, "获取信息失败")
+		return
+	}
+	// 查询激活码是否有效
+	vipKey := models.VIPKey{}
+	if err := models.DB.Where("account = ? AND password = ?", vipKeyInfo.Account, vipKeyInfo.Password).First(&vipKey).Error; err != nil {
+		tools.Fail(ctx, gin.H{
+			"ERROR": "激活码错误",
+		}, "激活码错误")
+		return
+	}
+	// 返回用户信息
+	tools.Success(ctx, gin.H{
+		"user_details": gin.H{
+			"name":       vipKey.Name,
+			"student_id": vipKey.StudentId,
+			"class":      vipKey.Class,
+		},
+	}, "获取用户信息成功")
 }
 
 // func (RegisterCon) AdminRegister(ctx *gin.Context) {

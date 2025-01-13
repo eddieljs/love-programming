@@ -23,10 +23,13 @@
 [GIN-debug] GET    /learn/course/list        --> untitled/controllers/learn.CourseCon.CourseList-fm (5 handlers)
 [GIN-debug] GET    /learn/course/all         --> untitled/controllers/learn.CourseCon.AllCourse-fm (5 handlers)
 [GIN-debug] GET    /learn/course/teacher     --> untitled/controllers/learn.CourseCon.TeacherCourse-fm (5 handlers)
+[GIN-debug] GET    /learn/course/searchByKey --> untitled/controllers/learn.CourseCon.SearchCourseByKey-fm (5 handlers)
+[GIN-debug] POST   /learn/course/join        --> untitled/controllers/learn.CourseCon.JoinCourse-fm (5 handlers)
 [GIN-debug] POST   /user/login               --> untitled/controllers/auth.LoginCon.OpenIdLogin-fm (4 handlers)
 [GIN-debug] GET    /user/space               --> untitled/controllers/auth.SpaceCon.Space-fm (5 handlers)
 [GIN-debug] POST   /user/changeInfo          --> untitled/controllers/auth.SpaceCon.ChangeInfo-fm (5 handlers)
 [GIN-debug] POST   /user/active              --> untitled/controllers/auth.RegisterCon.VIPRegister-fm (5 handlers)
+[GIN-debug] POST   /user/getUserInfo         --> untitled/controllers/auth.RegisterCon.GetUserInfo-fm (5 handlers)
 [GIN-debug] POST   /admin/active/t           --> untitled/controllers/auth.RegisterCon.TeacherRegister-fm (5 handlers)
 [GIN-debug] POST   /admin/upload/p           --> untitled/controllers/auth.UploadCon.UploadResource-fm (6 handlers)
 [GIN-debug] POST   /admin/upload/v           --> untitled/controllers/auth.UploadCon.UploadVideo-fm (6 handlers)
@@ -45,3 +48,5 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :80
+[GIN] 2025/01/13 - 16:20:09 | 200 |    336.7098ms |             ::1 | POST     "/user/login"
+[GIN] 2025/01/13 - 16:20:10 | 200 |    253.6805ms |             ::1 | POST     "/user/login"

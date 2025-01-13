@@ -14,6 +14,7 @@ func AuthRouters(r *gin.Engine) {
 		Routers.GET("/space", tools.AuthMiddleware, auth.SpaceCon{}.Space)
 		Routers.POST("/changeInfo", tools.AuthMiddleware, auth.SpaceCon{}.ChangeInfo)
 		Routers.POST("/active", tools.AuthMiddleware, auth.RegisterCon{}.VIPRegister)
+		Routers.POST("/getUserInfo", tools.AuthMiddleware, auth.RegisterCon{}.GetUserInfo) // 获取用户信息（姓名、学号、班级等）
 	}
 }
 

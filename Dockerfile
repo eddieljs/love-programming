@@ -1,21 +1,16 @@
-# 第一阶段：构建阶段
-FROM golang:1.23 as builder
+# 第一阶段：构建 Go 可执行文件
+FROM golang:1.23.2 AS builder
 
-WORKDIR /app
+RUN export GO111MODULE="on"
+RUN mkdir /go/src/app
+RUN export GOPATH="/go/src"
+RUN export  GOPROXY="https://goproxy.cn,direct"
 
-# 复制代码到容器中
-COPY . .
+ADD . /go/src/app
 
-# 编译应用程序
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+WORKDIR /go/src/app
+RUN pwd
+RUN  go mod download
 
-# 第二阶段：运行阶段
-FROM alpine:latest
-
-WORKDIR /app
-
-# 从构建阶段复制二进制文件
-COPY --from=builder /app/main .
-
-# 设置容器启动命令
-CMD ["/app/main"]
+RUN go build -o main .
+ENTRYPOINT ["./main"]

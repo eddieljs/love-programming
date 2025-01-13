@@ -20,9 +20,11 @@ func (Course) TableName() string {
 }
 
 type CourseUser struct {
-	Id       int `json:"id" form:"id"`
-	CourseId int `json:"courseId" form:"courseId"`
-	UserId   int `json:"userId" form:"userId"`
+	Id         int    `json:"id" form:"id"`
+	CourseId   int    `json:"courseId" form:"courseId"`
+	UserId     int    `json:"userId" form:"userId"`
+	TeacherId  int    `json:"teacherId" from:"teacherId"` // 教师ID
+	CourseTime string `json:"course_time" from:"course_time"`
 }
 
 func (CourseUser) TableName() string {
@@ -31,7 +33,7 @@ func (CourseUser) TableName() string {
 
 type CourseExam struct {
 	Id          int    `json:"id" form:"id"`
-	Message     string `json:"message" form:"message"`
+	CourseTime  string `json:"courseTime" form:"courseTime"`
 	UserId      int    `json:"userId" form:"userId"`
 	CourseTitle string `json:"courseTitle" form:"courseTitle"`
 	CourseKey   string `json:"courseKey" form:"courseKey"`
@@ -41,4 +43,12 @@ type CourseExam struct {
 
 func (CourseExam) TableName() string {
 	return "course_exam"
+}
+
+// CourseTeacher 结构体表示课程和教师的关联关系
+type CourseTeacher struct {
+	Id        int    `json:"id" gorm:"primaryKey"`
+	CourseId  int    `json:"course_id"`  // 课程ID
+	TeacherId int    `json:"teacher_id"` // 教师ID
+	Key       string `json:"key"`        // 加课码
 }

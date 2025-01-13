@@ -103,5 +103,8 @@ func CourseRouters(r *gin.Engine) {
 		Routers.GET("/list", tools.AuthMiddleware, learn.CourseCon{}.CourseList)
 		Routers.GET("/all", tools.AuthMiddleware, learn.CourseCon{}.AllCourse)
 		Routers.GET("/teacher", tools.AuthMiddleware, learn.CourseCon{}.TeacherCourse)
+
+		Routers.GET("/searchByKey", tools.AuthMiddleware, learn.CourseCon{}.SearchCourseByKey) // 搜索课程
+		Routers.POST("/join", tools.AuthMiddleware, learn.CourseCon{}.JoinCourse)              // 加入课程
 	}
 }

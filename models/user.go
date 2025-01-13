@@ -10,6 +10,7 @@ type User struct {
 	Avatar    string   `json:"avatar"`
 	Openid    string   `json:"openid"`
 	VipTime   int      `json:"vipTime"`
+	Class     string   `json:"class"`
 	Courses   []Course `json:"courses" gorm:"many2many:course_user;foreignKey:Id;joinForeignKey:UserId;References:Id;joinReferences:CourseId"`
 }
 
@@ -51,9 +52,12 @@ func (ChoiceRecord) TableName() string {
 }
 
 type VIPKey struct {
-	Id       int    `json:"id" form:"id"`
-	Account  string `json:"account" form:"account"`
-	Password string `json:"password" forn:"password"`
+	Id        int    `json:"id" form:"id"`
+	Account   string `json:"account" form:"account"`
+	Password  string `json:"password" form:"password"`
+	Name      string `json:"name" form:"name"`             // 姓名
+	Class     string `json:"class" form:"class"`           // 班级
+	StudentId string `json:"student_id" form:"student_id"` // 学号
 }
 
 func (VIPKey) TableName() string {

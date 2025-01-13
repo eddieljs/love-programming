@@ -1,7 +1,8 @@
 package auth
 
 import (
-	"log"
+	"errors"
+	"gorm.io/gorm"
 	"net/http"
 	"time"
 	"untitled/models"
@@ -112,14 +113,55 @@ func (UploadCon) UploadPoint(ctx *gin.Context) {
 	}, "上传成功")
 }
 
+// 新增课程
+//
+//	func (UploadCon) AddCourse(ctx *gin.Context) {
+//		// 接收title,key,message
+//		userInfo, _ := ctx.Get("user")
+//		user := userInfo.(models.User)
+//		courseInfo := struct {
+//			Title   string `json:"title" form:"title"`
+//			Key     string `json:"key" form:"key"`
+//			Message string `json:"message" form:"message"`
+//		}{}
+//		if err := ctx.ShouldBind(&courseInfo); err != nil {
+//			ctx.JSON(http.StatusOK, gin.H{
+//				"err": err.Error(),
+//			})
+//			return
+//		}
+//		// 设置时区为中国时区 (Asia/Shanghai)
+//		location, err := time.LoadLocation("Asia/Shanghai")
+//		if err != nil {
+//			// 如果无法加载时区，返回错误
+//			ctx.JSON(http.StatusOK, gin.H{
+//				"err": "无法加载时区",
+//			})
+//			return
+//		}
+//		// 获取当前时间并设置为中国时区
+//		currentTime := time.Now().In(location).Format("2006-01-02 15:04:05")
+//		ce := models.CourseExam{
+//			CourseTitle: courseInfo.Title,
+//			CourseKey:   courseInfo.Key,
+//			User:        user,
+//			Message:     courseInfo.Message,
+//			Time:        currentTime,
+//		}
+//
+//		models.DB.Create(&ce)
+//		tools.Success(ctx, gin.H{
+//			"req": ce,
+//		}, "请求成功，审核中。")
+//	}
 func (UploadCon) AddCourse(ctx *gin.Context) {
-	// 接收title,key,message
+	// 接收 title, key, course_time
 	userInfo, _ := ctx.Get("user")
 	user := userInfo.(models.User)
 	courseInfo := struct {
-		Title   string `json:"title" form:"title"`
-		Key     string `json:"key" form:"key"`
-		Message string `json:"message" form:"message"`
+		Title      string `json:"title" form:"title"`
+		Key        string `json:"key" form:"key"`
+		CourseTime string `json:"course_time" form:"course_time"` // 上课时间
 	}{}
 	if err := ctx.ShouldBind(&courseInfo); err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -127,17 +169,43 @@ func (UploadCon) AddCourse(ctx *gin.Context) {
 		})
 		return
 	}
+	// 验证 key是否已经存在
+	var existingCourse models.CourseExam
+	if err := models.DB.Where("course_key = ? ", courseInfo.Key).First(&existingCourse).Error; err == nil {
+		// 如果 key 已经存在，返回错误
+		tools.Fail(ctx, gin.H{}, "选课码已存在，请使用其他选课码")
+		return
+	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
+		// 如果查询出错，返回错误
+		tools.Fail(ctx, gin.H{}, "查询选课码失败: "+err.Error())
+		return
+	}
+	// 设置时区为中国时区 (Asia/Shanghai)
+	location, err := time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		// 如果无法加载时区，返回错误
+		tools.Fail(ctx, gin.H{}, "无法加载时区")
+		return
+	}
+	// 获取当前时间并设置为中国时区
+	currentTime := time.Now().In(location).Format("2006-01-02 15:04:05")
+
+	// 创建课程审核信息
 	ce := models.CourseExam{
 		CourseTitle: courseInfo.Title,
 		CourseKey:   courseInfo.Key,
+		CourseTime:  courseInfo.CourseTime, // 上课时间
 		User:        user,
-		Message:     courseInfo.Message,
-		Time:        time.Now().Format("2006-01-02 15:04:05"),
+		Time:        currentTime,
 	}
 
-	log.Println("后端返回时间111" + ce.Time)
+	// 保存到数据库
+	if err := models.DB.Create(&ce).Error; err != nil {
+		tools.Fail(ctx, gin.H{}, "创建课程失败: "+err.Error())
+		return
+	}
 
-	models.DB.Create(&ce)
+	// 返回成功响应
 	tools.Success(ctx, gin.H{
 		"req": ce,
 	}, "请求成功，审核中。")
